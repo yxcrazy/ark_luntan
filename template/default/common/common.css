@@ -80,7 +80,13 @@ CSS 写作注意事项：
 	IE8 专用：			.ie8 .foo { ... }
 
 ---------------------------------- */
-
+/*
+	Name:			mod_header
+	Level:			Global
+	Explain:		重新定义Log
+	Last Modify:	Yuan xin
+*/
+#header_logo img{width: 300px; height: 80px;}
 /*
 	Name:			mod_reset
 	Level:			Global
