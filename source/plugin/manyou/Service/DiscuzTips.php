@@ -31,7 +31,7 @@ class Cloud_Service_DiscuzTips {
 			return '';
 		}
 		$clientVersion = '2';
-		$util = Cloud::loadclass('Service_Util');
+		$util = Cloud::loadClass('Service_Util');
 		include_once DISCUZ_ROOT . '/source/discuz_version.php';
 		$release = DISCUZ_RELEASE;
 		$fix = DISCUZ_FIXBUG;

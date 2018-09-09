@@ -129,11 +129,11 @@ class Cloud_Service_Connect {
 		return $jsurl;
 	}
 
-	public function connectCookieLoginJs() {
-		global $_G;
-
-		return $ajaxUrl = 'connect.php?mod=check&op=cookie';
-	}
+//	public function connectCookieLoginJs() {
+//		global $_G;
+//
+//		return $ajaxUrl = 'connect.php?mod=check&op=cookie';
+//	}
 
 	public function connectGetSigKey() {
 		global $_G;
