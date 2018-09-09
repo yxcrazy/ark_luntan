@@ -7,62 +7,68 @@
  *      $Id: class_cloud.php 34000 2013-09-17 08:52:48Z nemohou $
  */
 
-if(!defined('IN_DISCUZ')) {
-	exit('Access Denied');
+if (!defined('IN_DISCUZ')) {
+    exit('Access Denied');
 }
 
-class Cloud {
+class Cloud
+{
 
-	static private $_loaded = array();
+    static private $_loaded = array();
 
-	public static function loadClass($className, $params = null) {
+    public static function loadClass($className, $params = null)
+    {
+        return "";
+//        if (strpos($className, 'Cloud_') !== 0) {
+//            $className = 'Cloud_' . $className;
+//        }
+//
+//        self::loadFile($className);
+//
+//        $instance = call_user_func_array(array($className, 'getInstance'), (array)$params);
+//
+//        return $instance;
+    }
 
-		if (strpos($className, 'Cloud_') !== 0) {
-			$className = 'Cloud_' . $className;
-		}
+    public static function loadFile($className)
+    {
 
-		self::loadFile($className);
+        $items = explode('_', $className);
+        if ($items[0] == 'Cloud') {
+            unset($items[0]);
+        }
 
-		$instance = call_user_func_array(array($className, 'getInstance'), (array)$params);
+        $loadKey = implode('_', $items);
+        if (isset(self::$_loaded[$loadKey])) {
+            return true;
+        }
 
-		return $instance;
-	}
+        $file = DISCUZ_ROOT . '/source/plugin/manyou/' . implode('/', $items) . '.php';
 
-	public static function loadFile($className) {
+        if (!is_file($file)) {
+            throw new Cloud_Exception('Cloud file not exists!', 50001);
+        }
 
-		$items = explode('_', $className);
-		if ($items[0] == 'Cloud') {
-			unset($items[0]);
-		}
+        include $file;
+        self::$_loaded[$loadKey] = true;
 
-		$loadKey = implode('_', $items);
-		if (isset(self::$_loaded[$loadKey])) {
-			return true;
-		}
+        return true;
+    }
 
-		$file = DISCUZ_ROOT . '/source/plugin/manyou/' . implode('/', $items) . '.php';
+}
 
-		if (!is_file($file)) {
-			throw new Cloud_Exception('Cloud file not exists!', 50001);
-		}
+class Cloud_Exception extends Exception
+{
 
-		include $file;
-		self::$_loaded[$loadKey] = true;
-
-		return true;
-	}
+    public function __construct($message, $code = 0)
+    {
+        if ($message instanceof Exception) {
+            parent::__construct($message->getMessage(), intval($message->getCode()));
+        } else {
+            parent::__construct($message, intval($code));
+        }
+    }
 
 }
 
-class Cloud_Exception extends Exception {
-
-	public function __construct($message, $code = 0) {
-		if ($message instanceof Exception) {
-			parent::__construct($message->getMessage(), intval($message->getCode()));
-		} else {
-			parent::__construct($message, intval($code));
-		}
-	}
-
-}
 ?>
