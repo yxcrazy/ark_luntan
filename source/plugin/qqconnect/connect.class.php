@@ -151,10 +151,10 @@ class plugin_qqconnect extends plugin_qqconnect_base {
 		}
 
 		loadcache('connect_login_report_date');
-		if (dgmdate(TIMESTAMP, 'Y-m-d') != $_G['cache']['connect_login_report_date']) {
-			$jsurl = $connectService->connectCookieLoginJs();
-			$loadJs['cookieloginjs'] = array('jsurl' => $jsurl);
-		}
+//		if (dgmdate(TIMESTAMP, 'Y-m-d') != $_G['cache']['connect_login_report_date']) {
+//			$jsurl = $connectService->connectCookieLoginJs();
+//			$loadJs['cookieloginjs'] = array('jsurl' => $jsurl);
+//		}
 
 		if ($_G['member']['conisbind']) {
 			$connectService->connectMergeMember();
