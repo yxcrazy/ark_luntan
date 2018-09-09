@@ -52,7 +52,7 @@ if(!$operation) {
 			}
 			$checkresult = dunserialize(cloudaddons_upgradecheck($addonids));
 			savecache('addoncheck_plugin', $checkresult);
-			dsetcookie('addoncheck_plugin', 1, 3600);
+            dsetcookie('addoncheck_plugin', 1, 43200);
 		} else {
 			loadcache('addoncheck_plugin');
 			$checkresult = $_G['cache']['addoncheck_plugin'];
@@ -630,7 +630,7 @@ if(!$operation) {
 		$pluginid = $plugin['pluginid'];
 	}
 
-	cloudaddons_validator($plugin['identifier'].'.plugin');
+	//cloudaddons_validator($plugin['identifier'].'.plugin');
 
 	$plugin['modules'] = dunserialize($plugin['modules']);
 

@@ -251,7 +251,7 @@ if($isfounder) {
 		array('menu_postsplit', 'postsplit_manage'),
 		array('menu_threadsplit', 'threadsplit_manage'),
 		//array('menu_upgrade', 'upgrade'),
-		array('menu_optimizer', 'optimizer_performance'),
+		array('menu_o`ptimizer', 'optimizer_performance'),
 	);
 
 	$menu['uc'] = array();
