@@ -33,31 +33,31 @@ if(isfounder()) {
 require './source/admincp/admincp_menu.php';
 $basescript = ADMINSCRIPT;
 
-$shownotice = '';
-if($_G['uid'] && $_G['member']['allowadmincp'] == 1 && ($_G['setting']['showpatchnotice'] == 1 || !isset($_G['cookie']['checkpatch']))) {
-	$discuz_patch = new discuz_patch();
-	if($_G['setting']['showpatchnotice'] == 1) {
-		$notice = $discuz_patch->fetch_patch_notice();
-		if($notice['data']) {
-			$shownotice = '<div class="notice"><a href="'.$basescript.'?action=patch" id="notice">'.($notice['fixed'] ? $lang['patch_fix_complete'] : $lang['patch_fix_rigth_now']).'</a></div>';
-		}
-	}
-	if(!isset($_G['cookie']['checkpatch'])) {
-		$discuz_patch->check_patch();
-	}
-}
-if($_G['uid'] && $_G['member']['allowadmincp'] == 1 && !$shownotice && $_G['setting']['upgrade']) {
-	$shownotice = '<div class="notice"><a href="'.$basescript.'?action=upgrade" id="notice">'.$lang['upgrade_right_now'].'</a></div>';
-}
-if($_G['uid'] && $_G['member']['allowadmincp'] == 1 && !isset($_G['cookie']['checkupgrade'])) {
-	$discuz_upgrade = new discuz_upgrade();
-	if($discuz_upgrade->check_upgrade()) {
-		if(empty($shownotice)) {
-			$shownotice = '<div class="notice"><a href="'.$basescript.'?action=upgrade" id="notice">'.$lang['upgrade_right_now'].'</a></div>';
-		}
-	}
-	dsetcookie('checkupgrade', 1, 7200);
-}
+//$shownotice = '';
+//if($_G['uid'] && $_G['member']['allowadmincp'] == 1 && ($_G['setting']['showpatchnotice'] == 1 || !isset($_G['cookie']['checkpatch']))) {
+//	$discuz_patch = new discuz_patch();
+//	if($_G['setting']['showpatchnotice'] == 1) {
+//		$notice = $discuz_patch->fetch_patch_notice();
+//		if($notice['data']) {
+//			$shownotice = '<div class="notice"><a href="'.$basescript.'?action=patch" id="notice">'.($notice['fixed'] ? $lang['patch_fix_complete'] : $lang['patch_fix_rigth_now']).'</a></div>';
+//		}
+//	}
+//	if(!isset($_G['cookie']['checkpatch'])) {
+//		$discuz_patch->check_patch();
+//	}
+//}
+//if($_G['uid'] && $_G['member']['allowadmincp'] == 1 && !$shownotice && $_G['setting']['upgrade']) {
+//	$shownotice = '<div class="notice"><a href="'.$basescript.'?action=upgrade" id="notice">'.$lang['upgrade_right_now'].'</a></div>';
+//}
+//if($_G['uid'] && $_G['member']['allowadmincp'] == 1 && !isset($_G['cookie']['checkupgrade'])) {
+//	$discuz_upgrade = new discuz_upgrade();
+//	if($discuz_upgrade->check_upgrade()) {
+//		if(empty($shownotice)) {
+//			$shownotice = '<div class="notice"><a href="'.$basescript.'?action=upgrade" id="notice">'.$lang['upgrade_right_now'].'</a></div>';
+//		}
+//	}
+//	dsetcookie('checkupgrade', 1, 7200);
+//}
 
 echo <<<EOT
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">

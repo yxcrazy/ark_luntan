@@ -30,7 +30,12 @@ if(!$operation) {
 		$extra .= '&'.addslashes($_GET['extra']);
 	}
 	$url = cloudaddons_url($extra);
-	echo '<script type="text/javascript">location.href=\''.$url.'\';</script>';
+//	echo '<script type="text/javascript">location.href=\''.$url.'\';</script>';
+    if($_G['isHTTPS']) {
+        echo '<script type="text/javascript">window.open(\''.$url.'\');</script>';
+    } else {
+        echo '<script type="text/javascript">location.href=\''.$url.'\';</script>';
+    }
 
 } elseif($operation == 'download') {
 	$step = intval($_GET['step']);
