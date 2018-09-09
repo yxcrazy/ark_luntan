@@ -3215,9 +3215,9 @@ function notifymembers($operation, $variable) {
 			$toUids = array_keys($members);
 			if($_G['setting']['cloud_status'] && !empty($toUids)) {
 				try {
-					$noticeService = Cloud::loadClass('Service_Client_Notification');
+					//$noticeService = Cloud::loadClass('Service_Client_Notification');
 					$fromType = $_GET['system'] ? 1 : 2;
-					$noticeService->addSiteMasterUserNotify($toUids, $subject, $message, $_G['uid'], $_G['username'], $fromType, TIMESTAMP);
+					//$noticeService->addSiteMasterUserNotify($toUids, $subject, $message, $_G['uid'], $_G['username'], $fromType, TIMESTAMP);
 				} catch (Cloud_Service_Client_RestfulException $e) {
 					cpmsg('['.$e->getCode().']'.$e->getMessage(), '', 'error');
 				}
