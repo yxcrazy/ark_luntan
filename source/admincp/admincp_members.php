@@ -1178,8 +1178,8 @@ EOF;
 
 		if($_GET['groupidnew'] != $member['groupid'] && (in_array($_GET['groupidnew'], array(4, 5)) || in_array($member['groupid'], array(4, 5)))) {
 			$my_opt = in_array($_GET['groupidnew'], array(4, 5)) ? 'banuser' : 'unbanuser';
-			$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
-			$log_handler->myThreadLog($my_opt, array('uid' => $member['uid']));
+			//$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
+			//$log_handler->myThreadLog($my_opt, array('uid' => $member['uid']));
 			banlog($member['username'], $member['groupid'], $_GET['groupidnew'], $groupexpirynew, $_GET['reason']);
 		}
 
@@ -1553,8 +1553,8 @@ EOF;
 			}
 		}
 		if(!empty($my_data) && !empty($mylogtype)) {
-			$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
-			$log_handler->myThreadLog($mylogtype, $my_data);
+			//$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
+			//$log_handler->myThreadLog($mylogtype, $my_data);
 		}
 
 

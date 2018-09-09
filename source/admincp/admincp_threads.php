@@ -369,9 +369,9 @@ EOT;
 			updateforumcount(intval($fid));
 		}
 
-		$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
+		//$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
 		foreach($_GET['tidarray'] as $tid) {
-			$log_handler->myThreadLog('move', array('tid' => $tid, 'otherid' => $_GET['toforum']));
+			//$log_handler->myThreadLog('move', array('tid' => $tid, 'otherid' => $_GET['toforum']));
 		}
 
 		$cpmsg = cplang('threads_succeed');
@@ -400,9 +400,9 @@ EOT;
 			updateforumcount(intval($fid));
 		}
 
-		$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
+		//$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
 		foreach($_GET['tidarray'] as $tid) {
-			$log_handler->myThreadLog('delete', array('tid' => $tid));
+			//$log_handler->myThreadLog('delete', array('tid' => $tid));
 		}
 		$cpmsg = cplang('threads_succeed');
 
@@ -424,9 +424,9 @@ EOT;
 		C::t('forum_thread')->update($tidsarray, array('displayorder'=>$_GET['stick_level']));
 		$my_act = $_GET['stick_level'] ? 'sticky' : 'update';
 
-		$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
+		//$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
 		foreach($_GET['tidarray'] as $tid) {
-			$log_handler->myThreadLog($my_act, array('tid' => $tid));
+			//$log_handler->myThreadLog($my_act, array('tid' => $tid));
 		}
 
 		if($_G['setting']['globalstick']) {
@@ -451,9 +451,9 @@ EOT;
 		C::t('forum_thread')->update($tidsarray, array('digest'=>$_GET['digest_level']));
 		$my_act = $_GET['digest_level'] ? 'digest' : 'update';
 
-		$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
+		//$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
 		foreach($_GET['tidarray'] as $tid) {
-			$log_handler->myThreadLog($my_act, array('tid' => $tid));
+			//$log_handler->myThreadLog($my_act, array('tid' => $tid));
 		}
 		$cpmsg = cplang('threads_succeed');
 
@@ -462,9 +462,9 @@ EOT;
 		C::t('forum_thread')->update($tidsarray, array('closed'=>$_GET['status']));
 		$my_opt = $_GET['status'] ? 'close' : 'open';
 
-		$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
+		//$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
 		foreach($_GET['tidarray'] as $tid) {
-			$log_handler->myThreadLog($my_opt, array('tid' => $tid));
+			//$log_handler->myThreadLog($my_opt, array('tid' => $tid));
 		}
 
 		$cpmsg = cplang('threads_succeed');
