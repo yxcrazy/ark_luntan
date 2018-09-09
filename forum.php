@@ -15,7 +15,7 @@ define('CURSCRIPT', 'forum');
 require './source/class/class_core.php';
 
 
-require './source/function/function_forum.php';
+//require './source/function/function_forum.php';
 
 require './source/function/function_ark_server.php';
 
