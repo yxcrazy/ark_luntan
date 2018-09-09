@@ -1753,23 +1753,23 @@ function strLenCalc(obj, checklen, maxlen) {
 	}
 }
 
-function patchNotice() {
-	if($('patch_notice')) {
-		ajaxget('misc.php?mod=patch&action=patchnotice', 'patch_notice', '');
-	}
-}
-
-function pluginNotice() {
-	if($('plugin_notice')) {
-		ajaxget('misc.php?mod=patch&action=pluginnotice', 'plugin_notice', '');
-	}
-}
-
-function ipNotice() {
-	if($('ip_notice')) {
-		ajaxget('misc.php?mod=patch&action=ipnotice&_r='+Math.random(), 'ip_notice', '');
-	}
-}
+// function patchNotice() {
+// 	if($('patch_notice')) {
+// 		ajaxget('misc.php?mod=patch&action=patchnotice', 'patch_notice', '');
+// 	}
+// }
+//
+// function pluginNotice() {
+// 	if($('plugin_notice')) {
+// 		ajaxget('misc.php?mod=patch&action=pluginnotice', 'plugin_notice', '');
+// 	}
+// }
+//
+// function ipNotice() {
+// 	if($('ip_notice')) {
+// 		ajaxget('misc.php?mod=patch&action=ipnotice&_r='+Math.random(), 'ip_notice', '');
+// 	}
+// }
 
 function noticeTitle() {
 	NOTICETITLE = {'State':0, 'oldTitle':NOTICECURTITLE, flashNumber:0, sleep:15};
