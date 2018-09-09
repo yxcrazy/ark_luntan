@@ -110,12 +110,12 @@ EOT;
 		$pidsdelete[] = $post['pid'];
 		if($post['first']) {
 			$tidsdelete[] = $post['tid'];
-		}
-
-		if($post['first']) {
-			//$log_handler->myThreadLog('delete', array('tid' => $post['tid']));
-		} else {
-			$log_handler->myPostLog('delete', array('pid' => $post['pid']));
+//		}
+//
+//		if($post['first']) {
+//			$log_handler->myThreadLog('delete', array('tid' => $post['tid']));
+//		} else {
+//			$log_handler->myPostLog('delete', array('pid' => $post['pid']));
 		}
 	}
 

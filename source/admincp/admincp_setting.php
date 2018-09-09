@@ -1666,7 +1666,7 @@ EOF;
 
 		showtableheader('', '', 'id="seccode"'.($_GET['anchor'] != 'seccode' ? ' style="display: none"' : ''));
 		showtitle('setting_sec_seccode_rule_setting');
-		showsetting('setting_sec_seccode_cloudip', 'settingnew[seccodedata][cloudip]', $setting['seccodedata']['cloudip'], 'radio');
+		//showsetting('setting_sec_seccode_cloudip', 'settingnew[seccodedata][cloudip]', $setting['seccodedata']['cloudip'], 'radio');
 		showsetting('setting_sec_seccode_rule_register', array('settingnew[seccodedata][rule][register][allow]', array(
 			array(2, cplang('setting_sec_seccode_rule_register_auto'), array('secrule_register' => '')),
 			array(1, cplang('setting_sec_seccode_rule_register_on'), array('secrule_register' => 'none')),
@@ -1754,7 +1754,7 @@ EOF;
 		$setting['secqaa'] = dunserialize($setting['secqaa']);
 		$start_limit = ($page - 1) * 10;
 		$secqaanums = C::t('common_secquestion')->count();
-		$multipage = multi($secqaanums, 10, $page, ADMINSCRIPT.'?action=setting&operation=sec&anchor=secqaa');
+        $multipage = multi($secqaanums, 10, $page, ADMINSCRIPT.'?action=setting&operation=seccheck&anchor=secqaa');
 
 
 		echo <<<EOT
@@ -2062,7 +2062,7 @@ EOT;
 	} elseif($operation == 'search') {
 
 		$setting['search'] = dunserialize($setting['search']);
-		$appService = Cloud::loadClass('Service_App');
+		//$appService = Cloud::loadClass('Service_App');
 		showtableheader('setting_search_status', 'fixpadding');
 		showsubtitle(array('setting_search_onoff', 'search_item_name', 'setting_serveropti_searchctrl', 'setting_serveropti_maxspm', 'setting_serveropti_maxsearchresults'));
 		if(helper_access::check_module('portal')) {
@@ -2074,7 +2074,7 @@ EOT;
 				'<input type="text" class="txt" name="settingnew[search][portal][maxsearchresults]" value="'.$setting['search']['portal']['maxsearchresults'].'" />',
 			);
 		}
-		if(!$appService->getCloudAppStatus('search')) {
+		//if(!$appService->getCloudAppStatus('search')) {
 			$search_forum = array(
 				$setting['search']['forum']['status'] ? '<input type="checkbox" class="checkbox" name="settingnew[search][forum][status]" value="1" checked="checked" />' : '<input type="checkbox" class="checkbox" name="settingnew[search][forum][status]" value="1" />',
 				cplang('setting_search_status_forum'),
@@ -2082,8 +2082,9 @@ EOT;
 				'<input type="text" class="txt" name="settingnew[search][forum][maxspm]" value="'.$setting['search']['forum']['maxspm'].'" />',
 				'<input type="text" class="txt" name="settingnew[search][forum][maxsearchresults]" value="'.$setting['search']['forum']['maxsearchresults'].'" />',
 			);
-		}
-		if(helper_access::check_module('blog')) {
+//		}
+//		if(helper_access::check_module('blog')) {
+        if(helper_access::check_module('blog')) {
 			$search_blog = array(
 				$setting['search']['blog']['status'] ? '<input type="checkbox" class="checkbox" name="settingnew[search][blog][status]" value="1" checked="checked" />' : '<input type="checkbox" class="checkbox" name="settingnew[search][blog][status]" value="1" />',
 				cplang('setting_search_status_blog'),
@@ -2128,7 +2129,7 @@ EOT;
 		showtablefooter();
 
 
-		if (!$appService->getCloudAppStatus('search')) {
+		//if (!$appService->getCloudAppStatus('search')) {
 			showtableheader('setting_search_srchhotkeywords');
 			showsetting('setting_search_srchhotkeywords', 'settingnew[srchhotkeywords]', $setting['srchhotkeywords'], 'textarea');
 
@@ -2151,9 +2152,9 @@ EOT;
 			$selectspxrank .='</select>';
 			showsetting('settings_sphinx_sphinxrank', '', '', $selectspxrank);
 			showtablefooter();
-		} else {
-			showtablerow('', 'colspan="10" class="lineheight"', $lang['setting_search_srchhotkeywords_disabled']);
-		}
+//		} else {
+//			showtablerow('', 'colspan="10" class="lineheight"', $lang['setting_search_srchhotkeywords_disabled']);
+//		}
 		showtableheader();
 
 	} elseif($operation == 'uc' && $isfounder) {
@@ -3226,14 +3227,14 @@ EOT;
 	}
 
 	if($operation == 'search') {
-		$appService = Cloud::loadClass('Service_App');
-		if($appService->getCloudAppStatus('search')) {
-			$setting['search'] = dunserialize($setting['search']);
-			$settingnew['search']['forum']['status'] = 1;
-			$settingnew['search']['forum']['searchctrl'] = $setting['search']['forum']['searchctrl'];
-			$settingnew['search']['forum']['maxspm'] = $setting['search']['forum']['maxspm'];
-			$settingnew['search']['forum']['maxsearchresults'] = $setting['search']['forum']['maxsearchresults'];
-		}
+		//$appService = Cloud::loadClass('Service_App');
+//		if($appService->getCloudAppStatus('search')) {
+//			$setting['search'] = dunserialize($setting['search']);
+//			$settingnew['search']['forum']['status'] = 1;
+//			$settingnew['search']['forum']['searchctrl'] = $setting['search']['forum']['searchctrl'];
+//			$settingnew['search']['forum']['maxspm'] = $setting['search']['forum']['maxspm'];
+//			$settingnew['search']['forum']['maxsearchresults'] = $setting['search']['forum']['maxsearchresults'];
+//		}
 		foreach($settingnew['search'] as $key => $val) {
 			foreach($val as $k => $v) {
 				$settingnew['search'][$key][$k] = max(0, intval($v));
