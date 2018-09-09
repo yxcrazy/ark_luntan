@@ -39,7 +39,7 @@ $modcachelist = array(
     'group' => array('grouptype', 'diytemplatenamegroup'),
 );
 
-$ark = getserverstatus();
+//$ark = getserverstatus();
 
 $mod = !in_array(C::app()->var['mod'], $modarray) ? 'index' : C::app()->var['mod'];
 
