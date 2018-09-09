@@ -209,9 +209,9 @@ if(!submitcheck('modsubmit') && !$_GET['fast']) {
 	if($moderation['delete']) {
 		$deletetids = array();
 		$recyclebintids = array();
-		$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
+		//$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
 		foreach(C::t('forum_thread')->fetch_all_by_tid_displayorder($moderation['delete'], $displayorder, '>=', $fidadd[fids]) as $thread) {
-			$log_handler->myThreadLog('delete', array('tid' => $thread['tid']));
+			//$log_handler->myThreadLog('delete', array('tid' => $thread['tid']));
 
 			if($recyclebins[$thread['fid']]) {
 				$recyclebintids[] = $thread['tid'];
@@ -243,7 +243,7 @@ if(!submitcheck('modsubmit') && !$_GET['fast']) {
 		$forums = array();
 
 		$tids = $authoridarray = $moderatedthread = array();
-		$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
+		//$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
 		foreach(C::t('forum_thread')->fetch_all_by_tid_fid($moderation['validate'], $fidadd['fids']) as $thread) {
 			if($thread['displayorder'] != -2 && $thread['displayorder']!= -3) {
 				continue;
@@ -252,7 +252,7 @@ if(!submitcheck('modsubmit') && !$_GET['fast']) {
 			$poststatus = $poststatus['status'];
 			$tids[] = $thread['tid'];
 
-			$log_handler->myThreadLog('validate', array('tid' => $thread['tid']));
+			//$log_handler->myThreadLog('validate', array('tid' => $thread['tid']));
 
 			if(getstatus($poststatus, 3) == 0) {
 				updatepostcredits('+', $thread['authorid'], 'post', $thread['fid']);
