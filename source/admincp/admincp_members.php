@@ -1552,10 +1552,10 @@ EOF;
 				uc_user_deleteavatar($member['uid']);
 			}
 		}
-		if(!empty($my_data) && !empty($mylogtype)) {
-			//$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
-			//$log_handler->myThreadLog($mylogtype, $my_data);
-		}
+//		if(!empty($my_data) && !empty($mylogtype)) {
+//			$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
+//			$log_handler->myThreadLog($mylogtype, $my_data);
+//		}
 
 
 		$setarr['adminid'] = $adminidnew;
