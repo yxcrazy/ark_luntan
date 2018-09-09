@@ -2209,7 +2209,7 @@ EOF;
 					'expiration' => $expiration,
 				);
 				C::t('common_banned')->insert($data);
-				captcha::report($_GET['ip1new'].'.'.$_GET['ip2new'].'.'.$_GET['ip3new'].'.'.$_GET['ip4new']);
+			//	captcha::report($_GET['ip1new'].'.'.$_GET['ip2new'].'.'.$_GET['ip3new'].'.'.$_GET['ip4new']);
 			}
 
 			if(is_array($_GET['expirationnew'])) {
@@ -2987,290 +2987,292 @@ function shownewsletter() {
 
 }
 
-function notifymembers($operation, $variable) {
-	global $_G, $lang, $urladd, $conditions, $search_condition;
+function notifymembers($operation, $variable)
+{
+    global $_G, $lang, $urladd, $conditions, $search_condition;
 
-	if(!empty($_GET['current'])) {
+    if (!empty($_GET['current'])) {
 
-		$subject = $message = '';
-		if($settings = C::t('common_setting')->fetch($variable, true)) {
-			$subject = $settings['subject'];
-			$message = $settings['message'];
-		}
+        $subject = $message = '';
+        if ($settings = C::t('common_setting')->fetch($variable, true)) {
+            $subject = $settings['subject'];
+            $message = $settings['message'];
+        }
 
-		$setarr = array();
-		foreach($_G['setting']['extcredits'] as $id => $value) {
-			if(isset($_GET['extcredits'.$id])) {
-				if($_GET['updatecredittype'] == 0) {
-					$setarr['extcredits'.$id] = $_GET['extcredits'.$id];
-				} else {
-					$setarr[] = 'extcredits'.$id;
-				}
-			}
-		}
+        $setarr = array();
+        foreach ($_G['setting']['extcredits'] as $id => $value) {
+            if (isset($_GET['extcredits' . $id])) {
+                if ($_GET['updatecredittype'] == 0) {
+                    $setarr['extcredits' . $id] = $_GET['extcredits' . $id];
+                } else {
+                    $setarr[] = 'extcredits' . $id;
+                }
+            }
+        }
 
-	} else {
+    } else {
 
-		$current = 0;
-		$subject = $_GET['subject'];
-		$message = $_GET['message'];
-		$subject = dhtmlspecialchars(trim($subject));
-		$message = trim(str_replace("\t", ' ', $message));
-		$addmsg = '';
-		if(($_GET['notifymembers'] && $_GET['notifymember']) && !($subject && $message)) {
-			cpmsg('members_newsletter_sm_invalid', '', 'error');
-		}
+        $current = 0;
+        $subject = $_GET['subject'];
+        $message = $_GET['message'];
+        $subject = dhtmlspecialchars(trim($subject));
+        $message = trim(str_replace("\t", ' ', $message));
+        $addmsg = '';
+        if (($_GET['notifymembers'] && $_GET['notifymember']) && !($subject && $message)) {
+            cpmsg('members_newsletter_sm_invalid', '', 'error');
+        }
 
-		if($operation == 'reward') {
+        if ($operation == 'reward') {
 
-			$serarr = array();
-			if($_GET['updatecredittype'] == 0) {
-				if(is_array($_GET['addextcredits']) && !empty($_GET['addextcredits'])) {
-					foreach($_GET['addextcredits'] as $key => $value) {
-						$value = intval($value);
-						if(isset($_G['setting']['extcredits'][$key]) && !empty($value)) {
-							$setarr['extcredits'.$key] = $value;
-							$addmsg .= $_G['setting']['extcredits'][$key]['title'].": ".($value > 0 ? '<em class="xi1">+' : '<em class="xg1">')."$value</em> ".$_G['setting']['extcredits'][$key]['unit'].' &nbsp; ';
-						}
-					}
-				}
-			} else {
-				if(is_array($_GET['resetextcredits']) && !empty($_GET['resetextcredits'])) {
-					foreach($_GET['resetextcredits'] as $key => $value) {
-						$value = intval($value);
-						if(isset($_G['setting']['extcredits'][$key]) && !empty($value)) {
-							$setarr[] = 'extcredits'.$key;
-							$addmsg .= $_G['setting']['extcredits'][$key]['title'].': <em class="xg1">'.cplang('members_reward_clean').'</em> &nbsp; ';
-						}
-					}
-				}
-			}
-			if($addmsg) {
-				$addmsg  = ' &nbsp; <br /><br /><b>'.cplang('members_reward_affect').':</b><br \>'.$addmsg;
-			}
+            $serarr = array();
+            if ($_GET['updatecredittype'] == 0) {
+                if (is_array($_GET['addextcredits']) && !empty($_GET['addextcredits'])) {
+                    foreach ($_GET['addextcredits'] as $key => $value) {
+                        $value = intval($value);
+                        if (isset($_G['setting']['extcredits'][$key]) && !empty($value)) {
+                            $setarr['extcredits' . $key] = $value;
+                            $addmsg .= $_G['setting']['extcredits'][$key]['title'] . ": " . ($value > 0 ? '<em class="xi1">+' : '<em class="xg1">') . "$value</em> " . $_G['setting']['extcredits'][$key]['unit'] . ' &nbsp; ';
+                        }
+                    }
+                }
+            } else {
+                if (is_array($_GET['resetextcredits']) && !empty($_GET['resetextcredits'])) {
+                    foreach ($_GET['resetextcredits'] as $key => $value) {
+                        $value = intval($value);
+                        if (isset($_G['setting']['extcredits'][$key]) && !empty($value)) {
+                            $setarr[] = 'extcredits' . $key;
+                            $addmsg .= $_G['setting']['extcredits'][$key]['title'] . ': <em class="xg1">' . cplang('members_reward_clean') . '</em> &nbsp; ';
+                        }
+                    }
+                }
+            }
+            if ($addmsg) {
+                $addmsg = ' &nbsp; <br /><br /><b>' . cplang('members_reward_affect') . ':</b><br \>' . $addmsg;
+            }
 
-			if(!empty($setarr)) {
-				$limit = 2000;
-				set_time_limit(0);
-				$i = 0;
-				while(true) {
-					$uids = searchmembers($search_condition, $limit, $i*$limit);
-					$allcount = C::t('common_member_count')->fetch_all($uids);
-					$insertmember = array_diff($uids, array_keys($allcount));
-					foreach($insertmember as $uid) {
-						C::t('common_member_count')->insert(array('uid' => $uid));
-					}
-					if($_GET['updatecredittype'] == 0) {
-						C::t('common_member_count')->increase($uids, $setarr);
-					} else {
-						C::t('common_member_count')->clear_extcredits($uids, $setarr);
-					}
-					if(count($uids) < $limit) break;
-					$i++;
-				}
-			} else {
-				cpmsg('members_reward_invalid', '', 'error');
-			}
+            if (!empty($setarr)) {
+                $limit = 2000;
+                set_time_limit(0);
+                $i = 0;
+                while (true) {
+                    $uids = searchmembers($search_condition, $limit, $i * $limit);
+                    $allcount = C::t('common_member_count')->fetch_all($uids);
+                    $insertmember = array_diff($uids, array_keys($allcount));
+                    foreach ($insertmember as $uid) {
+                        C::t('common_member_count')->insert(array('uid' => $uid));
+                    }
+                    if ($_GET['updatecredittype'] == 0) {
+                        C::t('common_member_count')->increase($uids, $setarr);
+                    } else {
+                        C::t('common_member_count')->clear_extcredits($uids, $setarr);
+                    }
+                    if (count($uids) < $limit) break;
+                    $i++;
+                }
+            } else {
+                cpmsg('members_reward_invalid', '', 'error');
+            }
 
-			if(!$_GET['notifymembers']) {
-				cpmsg('members_reward_succeed', '', 'succeed');
-			}
+            if (!$_GET['notifymembers']) {
+                cpmsg('members_reward_succeed', '', 'succeed');
+            }
 
-		} elseif ($operation == 'confermedal') {
+        } elseif ($operation == 'confermedal') {
 
-			$medals = $_GET['medals'];
-			if(!empty($medals)) {
-				$medalids = array();
-				foreach($medals as $key => $medalid) {
-					$medalids[] = $key;
-				}
+            $medals = $_GET['medals'];
+            if (!empty($medals)) {
+                $medalids = array();
+                foreach ($medals as $key => $medalid) {
+                    $medalids[] = $key;
+                }
 
-				$medalsnew = $comma = '';
-				$medalsnewarray = $medalidarray = array();
-				foreach(C::t('forum_medal')->fetch_all_by_id($medalids) as $medal) {
-					$medal['status'] = empty($medal['expiration']) ? 0 : 1;
-					$medal['expiration'] = empty($medal['expiration'])? 0 : TIMESTAMP + $medal['expiration'] * 86400;
-					$medal['medal'] = $medal['medalid'].(empty($medal['expiration']) ? '' : '|'.$medal['expiration']);
-					$medalsnew .= $comma.$medal['medal'];
-					$medalsnewarray[] = $medal;
-					$medalidarray[] = $medal['medalid'];
-					$comma = "\t";
-				}
+                $medalsnew = $comma = '';
+                $medalsnewarray = $medalidarray = array();
+                foreach (C::t('forum_medal')->fetch_all_by_id($medalids) as $medal) {
+                    $medal['status'] = empty($medal['expiration']) ? 0 : 1;
+                    $medal['expiration'] = empty($medal['expiration']) ? 0 : TIMESTAMP + $medal['expiration'] * 86400;
+                    $medal['medal'] = $medal['medalid'] . (empty($medal['expiration']) ? '' : '|' . $medal['expiration']);
+                    $medalsnew .= $comma . $medal['medal'];
+                    $medalsnewarray[] = $medal;
+                    $medalidarray[] = $medal['medalid'];
+                    $comma = "\t";
+                }
 
-				$uids = searchmembers($search_condition);
-				if($uids) {
-					foreach(C::t('common_member_field_forum')->fetch_all($uids) as $uid => $medalnew) {
-						$usermedal = array();
-						$addmedalnew = '';
-						if(empty($medalnew['medals'])) {
-							$addmedalnew = $medalsnew;
-						} else {
-							foreach($medalidarray as $medalid) {
-								$usermedal_arr = explode("\t", $medalnew['medals']);
-								foreach($usermedal_arr AS $key => $medalval) {
-									list($usermedalid,) = explode("|", $medalval);
-									$usermedal[] = $usermedalid;
-								}
-								if(!in_array($medalid, $usermedal)){
-									$addmedalnew .= $medalid."\t";
-								}
-							}
-							$addmedalnew .= $medalnew['medals'];
-						}
-						C::t('common_member_field_forum')->update($medalnew['uid'], array('medals' => $addmedalnew), true);
-						foreach($medalsnewarray as $medalnewarray) {
-							$data = array(
-								'uid' => $medalnew['uid'],
-								'medalid' => $medalnewarray['medalid'],
-								'type' => 0,
-								'dateline' => $_G['timestamp'],
-								'expiration' => $medalnewarray['expiration'],
-								'status' => $medalnewarray['status'],
-							);
-							C::t('forum_medallog')->insert($data);
-							C::t('common_member_medal')->insert(array('uid' => $medalnew['uid'], 'medalid' => $medalnewarray['medalid']), 0, 1);
-						}
-					}
-				}
-			}
+                $uids = searchmembers($search_condition);
+                if ($uids) {
+                    foreach (C::t('common_member_field_forum')->fetch_all($uids) as $uid => $medalnew) {
+                        $usermedal = array();
+                        $addmedalnew = '';
+                        if (empty($medalnew['medals'])) {
+                            $addmedalnew = $medalsnew;
+                        } else {
+                            foreach ($medalidarray as $medalid) {
+                                $usermedal_arr = explode("\t", $medalnew['medals']);
+                                foreach ($usermedal_arr AS $key => $medalval) {
+                                    list($usermedalid,) = explode("|", $medalval);
+                                    $usermedal[] = $usermedalid;
+                                }
+                                if (!in_array($medalid, $usermedal)) {
+                                    $addmedalnew .= $medalid . "\t";
+                                }
+                            }
+                            $addmedalnew .= $medalnew['medals'];
+                        }
+                        C::t('common_member_field_forum')->update($medalnew['uid'], array('medals' => $addmedalnew), true);
+                        foreach ($medalsnewarray as $medalnewarray) {
+                            $data = array(
+                                'uid' => $medalnew['uid'],
+                                'medalid' => $medalnewarray['medalid'],
+                                'type' => 0,
+                                'dateline' => $_G['timestamp'],
+                                'expiration' => $medalnewarray['expiration'],
+                                'status' => $medalnewarray['status'],
+                            );
+                            C::t('forum_medallog')->insert($data);
+                            C::t('common_member_medal')->insert(array('uid' => $medalnew['uid'], 'medalid' => $medalnewarray['medalid']), 0, 1);
+                        }
+                    }
+                }
+            }
 
-			if(!$_GET['notifymember']) {
-				cpmsg('members_confermedal_succeed', '', 'succeed');
-			}
-		} elseif ($operation == 'confermagic') {
-			$magics = $_GET['magic'];
-			$magicnum = $_GET['magicnum'];
-			if($magics) {
-				require_once libfile('function/magic');
-				$limit = 200;
-				set_time_limit(0);
-				for($i=0; $i > -1; $i++) {
-					$uids = searchmembers($search_condition, $limit, $i*$limit);
+            if (!$_GET['notifymember']) {
+                cpmsg('members_confermedal_succeed', '', 'succeed');
+            }
+        } elseif ($operation == 'confermagic') {
+            $magics = $_GET['magic'];
+            $magicnum = $_GET['magicnum'];
+            if ($magics) {
+                require_once libfile('function/magic');
+                $limit = 200;
+                set_time_limit(0);
+                for ($i = 0; $i > -1; $i++) {
+                    $uids = searchmembers($search_condition, $limit, $i * $limit);
 
-					foreach($magics as $magicid) {
-						$uparray = $insarray = array();
-						if(empty($magicnum[$magicid])) {
-							continue;
-						}
-						$query = C::t('common_member_magic')->fetch_all($uids ? $uids : -1, $magicid);
-						foreach($query as $row) {
-							$uparray[] = $row['uid'];
-						}
-						if($uparray) {
-							C::t('common_member_magic')->increase($uparray, $magicid, array('num' => $magicnum[$magicid]));
-						}
-						$insarray = array_diff($uids, $uparray);
-						if($insarray) {
-							$sqls = array();
-							foreach($insarray as $uid) {
-								C::t('common_member_magic')->insert(array(
-									'uid' => $uid,
-									'magicid' => $magicid,
-									'num' => $magicnum[$magicid]
-								));
-							}
-						}
-						foreach($uids as $uid) {
-							updatemagiclog($magicid, '3', $magicnum[$magicid], '', $uid);
-						}
-					}
-					if(count($uids) < $limit) break;
-				}
-			}
-		}
+                    foreach ($magics as $magicid) {
+                        $uparray = $insarray = array();
+                        if (empty($magicnum[$magicid])) {
+                            continue;
+                        }
+                        $query = C::t('common_member_magic')->fetch_all($uids ? $uids : -1, $magicid);
+                        foreach ($query as $row) {
+                            $uparray[] = $row['uid'];
+                        }
+                        if ($uparray) {
+                            C::t('common_member_magic')->increase($uparray, $magicid, array('num' => $magicnum[$magicid]));
+                        }
+                        $insarray = array_diff($uids, $uparray);
+                        if ($insarray) {
+                            $sqls = array();
+                            foreach ($insarray as $uid) {
+                                C::t('common_member_magic')->insert(array(
+                                    'uid' => $uid,
+                                    'magicid' => $magicid,
+                                    'num' => $magicnum[$magicid]
+                                ));
+                            }
+                        }
+                        foreach ($uids as $uid) {
+                            updatemagiclog($magicid, '3', $magicnum[$magicid], '', $uid);
+                        }
+                    }
+                    if (count($uids) < $limit) break;
+                }
+            }
+        }
 
-		C::t('common_setting')->update($variable, array('subject' => $subject, 'message' => $message));
-	}
+        C::t('common_setting')->update($variable, array('subject' => $subject, 'message' => $message));
+    }
 
-	$pertask = intval($_GET['pertask']);
-	$current = $_GET['current'] ? intval($_GET['current']) : 0;
-	$continue = FALSE;
+    $pertask = intval($_GET['pertask']);
+    $current = $_GET['current'] ? intval($_GET['current']) : 0;
+    $continue = FALSE;
 
-	if(!function_exists('sendmail')) {
-		include libfile('function/mail');
-	}
-	if($_GET['notifymember'] && in_array($_GET['notifymembers'], array('pm', 'notice', 'email', 'mobile'))) {
-		$uids = searchmembers($search_condition, $pertask, $current);
+    if (!function_exists('sendmail')) {
+        include libfile('function/mail');
+    }
+    if ($_GET['notifymember'] && in_array($_GET['notifymembers'], array('pm', 'notice', 'email'))) {
+        $uids = searchmembers($search_condition, $pertask, $current);
 
-		require_once libfile('function/discuzcode');
-		$message = in_array($_GET['notifymembers'], array('email','notice')) && $_GET['posttype'] ? discuzcode($message, 1, 0, 1, '', '' ,'' ,1) : discuzcode($message, 1, 0);
-		$pmuids = array();
-		if($_GET['notifymembers'] == 'pm') {
-			$membernum = countmembers($search_condition, $urladd);
-			$gpmid = $_GET['gpmid'];
-			if(!$gpmid) {
-				$pmdata = array(
-						'authorid' => $_G['uid'],
-						'author' => !$_GET['system'] ? $_G['member']['username'] : '',
-						'dateline' => TIMESTAMP,
-						'message' => ($subject ? '<b>'.$subject.'</b><br /> &nbsp; ' : '').$message.$addmsg,
-						'numbers' => $membernum
-					);
-				$gpmid = C::t('common_grouppm')->insert($pmdata, true);
-			}
-			$urladd .= '&gpmid='.$gpmid;
-		}
-		$members = C::t('common_member')->fetch_all($uids);
-		if($_GET['notifymembers'] == 'mobile') {
-			$toUids = array_keys($members);
-			if($_G['setting']['cloud_status'] && !empty($toUids)) {
-				try {
-					//$noticeService = Cloud::loadClass('Service_Client_Notification');
-					$fromType = $_GET['system'] ? 1 : 2;
-					//$noticeService->addSiteMasterUserNotify($toUids, $subject, $message, $_G['uid'], $_G['username'], $fromType, TIMESTAMP);
-				} catch (Cloud_Service_Client_RestfulException $e) {
-					cpmsg('['.$e->getCode().']'.$e->getMessage(), '', 'error');
-				}
+        require_once libfile('function/discuzcode');
+        $message = in_array($_GET['notifymembers'], array('email', 'notice')) && $_GET['posttype'] ? discuzcode($message, 1, 0, 1, '', '', '', 1) : discuzcode($message, 1, 0);
+        $pmuids = array();
+        if ($_GET['notifymembers'] == 'pm') {
+            $membernum = countmembers($search_condition, $urladd);
+            $gpmid = $_GET['gpmid'];
+            if (!$gpmid) {
+                $pmdata = array(
+                    'authorid' => $_G['uid'],
+                    'author' => !$_GET['system'] ? $_G['member']['username'] : '',
+                    'dateline' => TIMESTAMP,
+                    'message' => ($subject ? '<b>' . $subject . '</b><br /> &nbsp; ' : '') . $message . $addmsg,
+                    'numbers' => $membernum
+                );
+                $gpmid = C::t('common_grouppm')->insert($pmdata, true);
+            }
+            $urladd .= '&gpmid=' . $gpmid;
+        }
+        $members = C::t('common_member')->fetch_all($uids);
+//		if($_GET['notifymembers'] == 'mobile') {
+//			$toUids = array_keys($members);
+//			if($_G['setting']['cloud_status'] && !empty($toUids)) {
+//				try {
+//					$noticeService = Cloud::loadClass('Service_Client_Notification');
+//					$fromType = $_GET['system'] ? 1 : 2;
+//					$noticeService->addSiteMasterUserNotify($toUids, $subject, $message, $_G['uid'], $_G['username'], $fromType, TIMESTAMP);
+//				} catch (Cloud_Service_Client_RestfulException $e) {
+//					cpmsg('['.$e->getCode().']'.$e->getMessage(), '', 'error');
+//				}
+//
+//			}
+//		} else {
+        foreach ($members as $member) {
+            if ($_GET['notifymembers'] == 'pm') {
+                C::t('common_member_grouppm')->insert(array(
+                    'uid' => $member['uid'],
+                    'gpmid' => $gpmid,
+                    'status' => 0
+                ), false, true);
+                $newpm = setstatus(2, 1, $member['newpm']);
+                C::t('common_member')->update($member['uid'], array('newpm' => $newpm));
+            } elseif ($_GET['notifymembers'] == 'notice') {
+                notification_add($member['uid'], 'system', 'system_notice', array('subject' => $subject, 'message' => $message . $addmsg, 'from_id' => 0, 'from_idtype' => 'sendnotice'), 1);
+            } elseif ($_GET['notifymembers'] == 'email') {
+                if (!sendmail("$member[username] <$member[email]>", $subject, $message . $addmsg)) {
+                    runlog('sendmail', "$member[email] sendmail failed.");
+                }
+            }
 
-			}
-		} else {
-			foreach($members as $member) {
-				if($_GET['notifymembers'] == 'pm') {
-					C::t('common_member_grouppm')->insert(array(
-						'uid' => $member['uid'],
-						'gpmid' => $gpmid,
-						'status' => 0
-					), false, true);
-					$newpm = setstatus(2, 1, $member['newpm']);
-					C::t('common_member')->update($member['uid'], array('newpm'=>$newpm));
-				} elseif($_GET['notifymembers'] == 'notice') {
-					notification_add($member['uid'], 'system', 'system_notice', array('subject' => $subject, 'message' => $message.$addmsg, 'from_id' => 0, 'from_idtype' => 'sendnotice'), 1);
-				} elseif($_GET['notifymembers'] == 'email') {
-					if(!sendmail("$member[username] <$member[email]>", $subject, $message.$addmsg)) {
-						runlog('sendmail', "$member[email] sendmail failed.");
-					}
-				}
+            $log = array();
+            if ($_GET['updatecredittype'] == 0) {
+                foreach ($setarr as $key => $val) {
+                    if (empty($val)) continue;
+                    $val = intval($val);
+                    $id = intval($key);
+                    $id = !$id && substr($key, 0, -1) == 'extcredits' ? intval(substr($key, -1, 1)) : $id;
+                    if (0 < $id && $id < 9) {
+                        $log['extcredits' . $id] = $val;
+                    }
+                }
+                $logtype = 'RPR';
+            } else {
+                foreach ($setarr as $val) {
+                    if (empty($val)) continue;
+                    $id = intval($val);
+                    $id = !$id && substr($val, 0, -1) == 'extcredits' ? intval(substr($val, -1, 1)) : $id;
+                    if (0 < $id && $id < 9) {
+                        $log['extcredits' . $id] = '-1';
+                    }
+                }
+                $logtype = 'RPZ';
+            }
+            include_once libfile('function/credit');
+            credit_log($member['uid'], $logtype, $member['uid'], $log);
 
-				$log = array();
-				if($_GET['updatecredittype'] == 0) {
-					foreach($setarr as $key => $val) {
-						if(empty($val)) continue;
-						$val = intval($val);
-						$id = intval($key);
-						$id = !$id && substr($key, 0, -1) == 'extcredits' ? intval(substr($key, -1, 1)) : $id;
-						if(0 < $id && $id < 9) {
-								$log['extcredits'.$id] = $val;
-						}
-					}
-					$logtype = 'RPR';
-				} else {
-					foreach($setarr as $val) {
-						if(empty($val)) continue;
-						$id = intval($val);
-						$id = !$id && substr($val, 0, -1) == 'extcredits' ? intval(substr($val, -1, 1)) : $id;
-						if(0 < $id && $id < 9) {
-							$log['extcredits'.$id] = '-1';
-						}
-					}
-					$logtype = 'RPZ';
-				}
-				include_once libfile('function/credit');
-				credit_log($member['uid'], $logtype, $member['uid'], $log);
+            $continue = TRUE;
+        }
+    }
+//}
 
-				$continue = TRUE;
-			}
-		}
-	}
 
 	$newsletter_detail = array();
 	if($continue) {
@@ -3311,14 +3313,14 @@ function notifymembers($operation, $variable) {
 function banlog($username, $origgroupid, $newgroupid, $expiration, $reason, $status = 0) {
 	global $_G, $_POST;
 	$cloud_apps = dunserialize($_G['setting']['cloud_apps']);
-	if (isset($_POST['bannew']) && $_POST['formhash'] && $cloud_apps['security']['status'] == 'normal') {
-		$securityService = Cloud::loadClass('Service_Security');
-		if ($_POST['bannew']) {
-			$securityService->logBannedMember($username, $reason);
-		} else {
-			$securityService->updateMemberRecover($username);
-		}
-    }
+//	if (isset($_POST['bannew']) && $_POST['formhash'] && $cloud_apps['security']['status'] == 'normal') {
+//		$securityService = Cloud::loadClass('Service_Security');
+//		if ($_POST['bannew']) {
+//			$securityService->logBannedMember($username, $reason);
+//		} else {
+//			$securityService->updateMemberRecover($username);
+//		}
+//    }
 	writelog('banlog', dhtmlspecialchars("$_G[timestamp]\t{$_G[member][username]}\t$_G[groupid]\t$_G[clientip]\t$username\t$origgroupid\t$newgroupid\t$expiration\t$reason\t$status"));
 }
 
