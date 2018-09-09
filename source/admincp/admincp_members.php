@@ -1527,9 +1527,9 @@ EOF;
 			}
 			if(!$member['adminid']) {
 				$member_status = C::t('common_member_status')->fetch($member['uid']);
-				if($member_status) {
-					captcha::report($member_status['lastip']);
-				}
+//				if($member_status) {
+//					captcha::report($member_status['lastip']);
+//				}
 			}
 		} elseif($member['groupid'] == 4 || $member['groupid'] == 5) {
 			if(!empty($member['groupterms']['main']['groupid'])) {
