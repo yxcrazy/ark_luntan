@@ -185,7 +185,9 @@ class discuz_application extends discuz_base{
 			$sitepath = preg_replace("/\/archiver/i", '', $sitepath);
 		}
 		$_G['isHTTPS'] = ($_SERVER['HTTPS'] && strtolower($_SERVER['HTTPS']) != 'off') ? true : false;
-		$_G['siteurl'] = dhtmlspecialchars('http'.($_G['isHTTPS'] ? 's' : '').'://'.$_SERVER['HTTP_HOST'].$sitepath.'/');
+		//$_G['siteurl'] = dhtmlspecialchars('http'.($_G['isHTTPS'] ? 's' : '').'://'.$_SERVER['HTTP_HOST'].$sitepath.'/');
+        $_G['scheme'] = 'http'.($_G['isHTTPS'] ? 's' : '');
+        $_G['siteurl'] = dhtmlspecialchars($_G['scheme'].'://'.$_SERVER['HTTP_HOST'].$sitepath.'/');
 
 		$url = parse_url($_G['siteurl']);
 		$_G['siteroot'] = isset($url['path']) ? $url['path'] : '';
@@ -377,17 +379,30 @@ class discuz_application extends discuz_base{
 
 	private function _get_client_ip() {
 		$ip = $_SERVER['REMOTE_ADDR'];
-		if (isset($_SERVER['HTTP_CLIENT_IP']) && preg_match('/^([0-9]{1,3}\.){3}[0-9]{1,3}$/', $_SERVER['HTTP_CLIENT_IP'])) {
-			$ip = $_SERVER['HTTP_CLIENT_IP'];
-		} elseif(isset($_SERVER['HTTP_X_FORWARDED_FOR']) AND preg_match_all('#\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}#s', $_SERVER['HTTP_X_FORWARDED_FOR'], $matches)) {
-			foreach ($matches[0] AS $xip) {
-				if (!preg_match('#^(10|172\.16|192\.168)\.#', $xip)) {
-					$ip = $xip;
-					break;
-				}
-			}
-		}
-		return $ip;
+//		if (isset($_SERVER['HTTP_CLIENT_IP']) && preg_match('/^([0-9]{1,3}\.){3}[0-9]{1,3}$/', $_SERVER['HTTP_CLIENT_IP'])) {
+//			$ip = $_SERVER['HTTP_CLIENT_IP'];
+//		} elseif(isset($_SERVER['HTTP_X_FORWARDED_FOR']) AND preg_match_all('#\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}#s', $_SERVER['HTTP_X_FORWARDED_FOR'], $matches)) {
+//			foreach ($matches[0] AS $xip) {
+//				if (!preg_match('#^(10|172\.16|192\.168)\.#', $xip)) {
+//					$ip = $xip;
+//					break;
+//				}
+//			}
+//		}
+//		return $ip;
+        if (!$this->config['security']['onlyremoteaddr']) {
+            if (isset($_SERVER['HTTP_CLIENT_IP']) && preg_match('/^([0-9]{1,3}\.){3}[0-9]{1,3}$/', $_SERVER['HTTP_CLIENT_IP'])) {
+                $ip = $_SERVER['HTTP_CLIENT_IP'];
+            } elseif(isset($_SERVER['HTTP_X_FORWARDED_FOR']) AND preg_match_all('#\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}#s', $_SERVER['HTTP_X_FORWARDED_FOR'], $matches)) {
+                foreach ($matches[0] AS $xip) {
+                    if (!preg_match('#^(10|172\.16|192\.168)\.#', $xip)) {
+                        $ip = $xip;
+                        break;
+                    }
+                }
+            }
+        }
+        return $ip == '::1' ? '127.0.0.1' : $ip;
 	}
 
 	private function _init_db() {
@@ -699,13 +714,19 @@ class discuz_application extends discuz_base{
 			}
 		} else {
 			$styleid = !empty($this->var['cookie']['styleid']) ? $this->var['cookie']['styleid'] : 0;
-		}
-		if(intval(!empty($this->var['forum']['styleid']))) {
-			$this->var['cache']['style_default']['styleid'] = $styleid = $this->var['forum']['styleid'];
-		} elseif(intval(!empty($this->var['category']['styleid']))) {
-			$this->var['cache']['style_default']['styleid'] = $styleid = $this->var['category']['styleid'];
-		}
+//		}
+//		if(intval(!empty($this->var['forum']['styleid']))) {
+//			$this->var['cache']['style_default']['styleid'] = $styleid = $this->var['forum']['styleid'];
+//		} elseif(intval(!empty($this->var['category']['styleid']))) {
+//			$this->var['cache']['style_default']['styleid'] = $styleid = $this->var['category']['styleid'];
+//		}
 
+            if(intval(!empty($this->var['forum']['styleid']))) {
+                $this->var['cache']['style_default']['styleid'] = $styleid = $this->var['forum']['styleid'];
+            } elseif(intval(!empty($this->var['category']['styleid']))) {
+                $this->var['cache']['style_default']['styleid'] = $styleid = $this->var['category']['styleid'];
+            }
+        }
 		$styleid = intval($styleid);
 
 		if($styleid && $styleid != $this->var['setting']['styleid']) {
@@ -733,7 +754,11 @@ class discuz_application extends discuz_base{
 		}
 
 
-		$mobile = getgpc('mobile');
+        if(getgpc('forcemobile')) {
+            dsetcookie('dismobilemessage', '1', 3600);
+        }
+        $mobile = getgpc('mobile');
+
 		$mobileflag = isset($this->var['mobiletpl'][$mobile]);
 		if($mobile === 'no') {
 			dsetcookie('mobile', 'no', 3600);
@@ -790,8 +815,12 @@ class discuz_application extends discuz_base{
 		}
 		$arr = array_merge(array(strstr($_SERVER['QUERY_STRING'], '&simpletype'), strstr($_SERVER['QUERY_STRING'], 'simpletype')), $arr);
 		$query_sting_tmp = str_replace($arr, '', $_SERVER['QUERY_STRING']);
-		$this->var['setting']['mobile']['nomobileurl'] = ($this->var['setting']['domain']['app']['forum'] ? 'http://'.$this->var['setting']['domain']['app']['forum'].'/' : $this->var['siteurl']).$this->var['basefilename'].($query_sting_tmp ? '?'.$query_sting_tmp.'&' : '?').'mobile=no';
-
+		//$this->var['setting']['mobile']['nomobileurl'] = ($this->var['setting']['domain']['app']['forum'] ? 'http://'.$this->var['setting']['domain']['app']['forum'].'/' : $this->var['siteurl']).$this->var['basefilename'].($query_sting_tmp ? '?'.$query_sting_tmp.'&' : '?').'mobile=no';
+        parse_str($_SERVER['QUERY_STRING'], $query);
+        $query['mobile'] = 'no';
+        unset($query['simpletype']);
+        $query_sting_tmp = http_build_query($query);
+        $this->var['setting']['mobile']['nomobileurl'] = ($this->var['setting']['domain']['app']['forum'] ? 'http://'.$this->var['setting']['domain']['app']['forum'].'/' : $this->var['siteurl']).$this->var['basefilename'].'?'.$query_sting_tmp;
 		$this->var['setting']['lazyload'] = 0;
 
 		if('utf-8' != CHARSET) {
