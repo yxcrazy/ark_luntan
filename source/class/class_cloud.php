@@ -18,16 +18,16 @@ class Cloud
 
     public static function loadClass($className, $params = null)
     {
-        return "";
-//        if (strpos($className, 'Cloud_') !== 0) {
-//            $className = 'Cloud_' . $className;
-//        }
-//
-//        self::loadFile($className);
-//
-//        $instance = call_user_func_array(array($className, 'getInstance'), (array)$params);
-//
-//        return $instance;
+
+        if (strpos($className, 'Cloud_') !== 0) {
+            $className = 'Cloud_' . $className;
+        }
+
+        self::loadFile($className);
+
+        $instance = call_user_func_array(array($className, 'getInstance'), (array)$params);
+
+        return $instance;
     }
 
     public static function loadFile($className)
