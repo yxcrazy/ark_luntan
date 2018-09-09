@@ -77,7 +77,7 @@ $discuz->cachelist = $cachelist;
 
 switch ($mod) {
 	case 'secqaa':
-	case 'manyou':
+	//case 'manyou':
 	case 'userstatus':
 	case 'seccode':
 		$discuz->init_cron = false;
