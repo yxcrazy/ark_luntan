@@ -12,7 +12,7 @@
 	<!--{if widthauto()}-->
 		<link rel="stylesheet" id="css_widthauto" type="text/css" href='{$_G['setting']['csspath']}{STYLEID}_widthauto.css?{VERHASH}' />
 		<script type="text/javascript">HTMLNODE.className += ' widthauto'</script>
-	<!--{/if}-->
+<!--{/if}-->
 	<!--{if $_G['basescript'] == 'forum' || $_G['basescript'] == 'group'}-->
 		<script type="text/javascript" src="{$_G[setting][jspath]}forum.js?{VERHASH}"></script>
 	<!--{elseif $_G['basescript'] == 'home' || $_G['basescript'] == 'userapp'}-->
@@ -27,7 +27,17 @@
 		<link rel="stylesheet" type="text/css" id="diy_common" href="{$_G['setting']['csspath']}{STYLEID}_css_diy.css?{VERHASH}" />
 	<!--{/if}-->
 </head>
+<style>
+#server_table td,th{
+	border: 1px solid #E3EDF5;
+	height:20px;
 
+}
+#server_table td a{
+    color: #0e87e3;
+}
+
+</style>
 <body id="nv_{$_G[basescript]}" class="pg_{CURMODULE}{if $_G['basescript'] === 'portal' && CURMODULE === 'list' && !empty($cat)} {$cat['bodycss']}{/if}" onkeydown="if(event.keyCode==27) return false;">
 	<div id="append_parent"></div><div id="ajaxwaitid"></div>
 	<!--{if $_GET['diy'] == 'yes' && check_diy_perm($topic)}-->
@@ -160,6 +170,7 @@
 				<!--{subtemplate common/pubsearchform}-->
 			</div>
 		</div>
+
 	<div class="wp" style="margin-top:10px">
 		<!--[diy=diy1]-->
         <div id="diy1" class="area"><div id="frameyd7444" class="frame move-span cl frame-1-1">
@@ -174,11 +185,29 @@
                     </div>
                     <div id="portal_block_3_content" class="dxb_bc">
                         <div class="portal_block_summary">
-                            本服即将开放，敬请关注！本服4-5通，正在筹备，具体开放时间，QQ群会发通告，本服QQ群：31641038.本服低倍仿官，5训3采10成长，长久耐玩。
+                            本服已开放公测（五通），生存专家难度，长久/平衡，本服QQ群：31641038。
                         </div>
                         <div class="module cl xl xl1">
-                            <ul>
-                            </ul>
+                            <table id="server_table" style="border:1px solid #E3EDF5;border-collapse:collapse;width:50%;text-align: center;margin-bottom: 10px">
+								<tr>
+									<th style="text-align:center;font-weight:bold">服务器</th><th style="text-align:center;font-weight:bold">操作</th>
+								</tr>
+								<tr>
+									<td>焦土</td><td><a href="steam://connect/39.104.121.165:27017">点击加入游戏</a></td>
+								</tr>
+								<tr>
+									<td>仙境传说</td><td><a href="steam://connect/39.104.121.165:27016">点击加入游戏</a></td>
+								</tr>
+								<tr>
+									<td>中心岛</td><td><a href="steam://connect/39.104.121.165:37015">点击加入游戏</a></td>
+								</tr>
+								<tr>
+									<td>孤岛</td><td><a href="steam://connect/39.104.121.165:27015">点击加入游戏</a></td>
+								</tr>
+								<tr>
+									<td>畸变</td><td><a href="steam://connect/39.104.121.165:37016">点击加入游戏</a></td>
+								</tr>
+							</table>
                         </div>
                     </div>
                 </div>
